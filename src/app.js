@@ -5,9 +5,18 @@ var compression = require('compression'); //compression library to gzip response
 var favicon = require('serve-favicon'); //favicon library to handle favicon requests
 var cookieParser = require('cookie-parser'); //Library to parse cookies from the requests
 var bodyParser = require('body-parser'); //library to handle POST requests any information sent in an HTTP body
+var mongoose = require('mongoose');
 var router = require('./router.js'); 
 
+var dbURL = process.env.MONGOLAB_URI || "mongodb://localhost/simpleMVCExamples";
 
+mongoose.connect(dbURL,function(err){
+    if(err)
+    {
+        console.log("could not connect to database");
+        throw err;
+    } 
+});
 
 //Port set by process.env.PORT environment variable.
 //If the process.env.PORT variable or the env.NODE_PORT variables do not exist, use port 3000    

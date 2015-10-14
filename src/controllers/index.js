@@ -1,5 +1,9 @@
 var path = require('path'); //path is a built-in node library to handle file system paths
 
+var models = require('../models');
+
+var Cat = models.Cat.CatModel;
+
 var lastAdded = {
    name: "unknown"
 };
@@ -38,9 +42,23 @@ var setName = function(req, res) {
         return res.status(400).json({error: "firstname,lastname and beds are all required"});
     }
     
-    lastAdded.name = req.body.firstname + " " + req.body.lastname;
+    var name = req.body.firstname + " " + req.body.lastname;
     
-    res.json({name: lastAdded.name});
+    var catData = {
+        name: name,
+        bedsOwned: req.body.beds
+    };
+    
+    var newCat = new Cat(catData);
+    
+    newCat.save(function(err){
+        if(err)
+        {
+            return res.json({err:err}); 
+        }
+        
+        return res.json({name: name});
+    });
 };
 
 //function to handle a request to update the last added object
