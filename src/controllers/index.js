@@ -20,7 +20,17 @@ var hostIndex = function(req, res){
 };
 
 var hostPage1 = function(req, res) {
-    res.render('page1');
+    
+    var callback = function(err,cats)
+    {
+        if(err){
+            return res.json({err:err});
+        }
+        
+        return res.render('page1',{cats:cats});
+    };
+    
+    readAllCats(req,res,callback);
 };
 
 var hostPage2 = function(req, res) {
@@ -33,6 +43,10 @@ var hostPage3 = function(req, res) {
 
 var getName = function(req, res) {
     res.json({name: lastAdded.name});
+};
+
+var readAllCats = function(req,res,callback){
+    Cat.find(callback);  
 };
 
 //function to handle a request to set the name
@@ -56,6 +70,8 @@ var setName = function(req, res) {
         {
             return res.json({err:err}); 
         }
+        
+        lastAdded = newCat;
         
         return res.json({name: name});
     });
